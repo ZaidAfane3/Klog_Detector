@@ -1,0 +1,22 @@
+GetKeyState:
+Retrieves the status of the specified virtual key. The status specifies whether the key is up, down, or toggled (on, off—alternating each time the key is pressed).
+
+GetKeyboardState:
+Copies the status of the 256 virtual keys to the specified buffer.
+
+SetWindowsHookExA: 
+Installs an application-defined hook procedure into a hook chain. 
+You would install a hook procedure to monitor the system for certain types of events.
+These events are associated either with a specific thread or with all threads in the same desktop as the calling thread.
+
+Hook : A hook is a point in the system message-handling mechanism where an application can install a subroutine to monitor the message traffic in the system and process certain types of messages before they reach the target window procedure.
+A hook is a mechanism by which an application can intercept events,
+such as messages, mouse actions, and keystrokes. 
+A function that intercepts a particular type of event is known as a hook procedure. 
+A hook procedure can act on each event it receives, and then modify or discard the event.
+
+GetAsyncKeyState:
+Determines whether a key is up or down at the time the function is called, and whether the key was pressed after a previous call to GetAsyncKeyState.
+
+GetKeyboardLayout: 
+Retrieves the active input locale (Language) identifier (formerly called the keyboard layout).

@@ -1,6 +1,7 @@
 import pefile 
 import os 
 import sys
+import json 
 
 Sus_APIs = ["GetKeyState", "GetKeyboardState", "SetWindowsHookExA", "GetAsyncKeyState", "GetKeyboardLayout"]
 Default_Dir = "Keylogger"
@@ -35,14 +36,21 @@ def print_list (alist):
             print (i)
 
 def export_APIs_from_excutable ():
-    global result
-    APIs = list()
-    pe = pefile.PE(result["File"])
-    for entry in pe.DIRECTORY_ENTRY_IMPORT: 
-        for API in entry.imports:
-            APIs.append(API.name.decode())
-    APIs.sort()
-    result["APIs"] = {"All":APIs}
+    try : 
+        global result
+        APIs = list()
+        pe = pefile.PE(result["File"])
+        for entry in pe.DIRECTORY_ENTRY_IMPORT: 
+            for API in entry.imports:
+                if API.name is None:
+                    continue 
+                APIs.append(API.name.decode())
+        APIs.sort()
+        result["APIs"] = {"All":APIs}
+    except BaseException as err: 
+        print (APIs)
+        print (err)
+        exit (1)
 
 def get_key_api ():
     global result 
@@ -79,7 +87,6 @@ export_APIs_from_excutable()
 get_key_api()
 # print(result)
 
-print ()
 
 if  result["APIs"]["Suspicious"]["Count"] == 0: 
     print ("[*] There is no suspicious APIs here which means mostly this isn't a Keylogger or it maybe it's Obfuscated")
@@ -88,6 +95,16 @@ else:
     if len(result["APIs"]["Suspicious"]["Keyboard"]) > 0:
         print ("[!] ITS A KEYLOGGER !!!")
     else: 
-        print ("[!] There is keystrokes APIs detected but there is a WindowsHook intercepts interrupts in the system")
+        print ("[!] There is no keystrokes APIs detected but there is a WindowsHook intercepts interrupts in the system")
 print ()
 print (result["APIs"]["Suspicious"])
+print ("\n\n\n\n")
+
+
+
+json_object = json.loads(json.dumps(result))
+
+json_formatted_str = json.dumps(json_object, indent=2)
+
+print(json_formatted_str)
+
